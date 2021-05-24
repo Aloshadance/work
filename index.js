@@ -21,6 +21,7 @@ function addTask () {
   filters.querySelector('#filter_prior').value = ''
   filters.querySelector('#filter_input').value = ''
   taskList.push(new Task(createTask.value, addPriority.value, new Date().toLocaleString(), "actively"))
+  filteredTaskList = taskList.slice()
   //outputTasks(taskList)
   fillHtmlList(taskList)
   createTask.value = ''
@@ -84,7 +85,7 @@ const createTemplate = (n, index) => {
         <button class="fa fa-times" onclick="cancelTask(${index})" id="cancel_task" aria-hidden="true"></button>
       </div>
     </div>
-    <button class="fa fa-trash task-item" onclick="deleteTaskConfirm(${index})" id="delete_task" aria-hidden="true"></button>
+    <button class="fa fa-trash task-item" onclick="deleteTask(${index})" id="delete_task" aria-hidden="true"></button>
 </div>`
 }
 
@@ -99,7 +100,7 @@ const fillHtmlList = array => {
   }
 }
 
-fillHtmlList(taskList)
+// fillHtmlList(filteredTaskList)
 
 function outputPriority(n) {
     if (n.priority === 'high') {
@@ -132,32 +133,30 @@ function outputStatus(array,index) {
 //     taskList[index].text = input.value
 //   }
 
-const deleteTaskConfirm = index => {
- let result = confirm("Вы точно хотите удалить этот элемент?")
- if (result) { deleteTask (index)
- }
-}
-
 const deleteTask = index => {
+  const result = confirm("Вы точно хотите удалить этот элемент?")
+  if (result) {
+  filteredTaskList.splice(index, 1)
   taskList.splice(index, 1)
-  fillHtmlList(taskList)
+  }
+  fillHtmlList(filteredTaskList)
 }
 
 const cancelTask = index => {
-  if (taskList[index].status === "cancelled") {
-    taskList[index].status = "actively" 
+  if (filteredTaskList[index].status === "cancelled") {
+    filteredTaskList[index].status = "actively" 
   } else {
-    taskList[index].status = "cancelled" 
+    filteredTaskList[index].status = "cancelled" 
   } 
-  fillHtmlList(taskList)
+  fillHtmlList(filteredTaskList)
 }
 
 const completeTask = index => {
-  if (taskList[index].status === "completed") {
-    taskList[index].status = "actively" 
+  if (filteredTaskList[index].status === "completed") {
+    filteredTaskList[index].status = "actively" 
   } else {
-    taskList[index].status = "completed" 
+    filteredTaskList[index].status = "completed" 
   }
-  fillHtmlList(taskList)
+  fillHtmlList(filteredTaskList)
 }
 
